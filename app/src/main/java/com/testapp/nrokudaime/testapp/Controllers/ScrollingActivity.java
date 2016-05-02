@@ -76,8 +76,15 @@ public class ScrollingActivity extends AppCompatActivity implements Callback<Arr
         cursor = db.query(daoRecord.getTablename(), daoRecord.getAllColumns(), null, null, null, null, orderBy);
         ArrayList<Record> records = new ArrayList<Record>();
         if (cursor.moveToFirst()) {
+                Date currentDate = new Date();
             do {
-                records.add(daoRecord.readEntity(cursor, 0));
+                Record record = daoRecord.readEntity(cursor, 0);
+                if (record.getEnd_date_formated().after(currentDate))
+                {
+                    records.add(record);
+                } else {
+                    daoRecord.delete(record);
+                }
             } while (cursor.moveToNext());
             mAdapter.setRecords(records);
             mRecyclerView.setAdapter(mAdapter);
