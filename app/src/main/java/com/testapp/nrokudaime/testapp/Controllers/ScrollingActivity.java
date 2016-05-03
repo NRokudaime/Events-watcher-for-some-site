@@ -22,7 +22,9 @@ import com.testapp.nrokudaime.testapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -76,7 +78,13 @@ public class ScrollingActivity extends AppCompatActivity implements Callback<Arr
         cursor = db.query(daoRecord.getTablename(), daoRecord.getAllColumns(), null, null, null, null, orderBy);
         ArrayList<Record> records = new ArrayList<Record>();
         if (cursor.moveToFirst()) {
-                Date currentDate = new Date();
+                Calendar date = new GregorianCalendar();
+                date.set(Calendar.HOUR_OF_DAY, 0);
+                date.set(Calendar.MINUTE, 0);
+                date.set(Calendar.SECOND, 0);
+                date.set(Calendar.MILLISECOND, 0);
+                date.add(Calendar.DAY_OF_MONTH, 0);
+                final Date currentDate = date.getTime(); // get midnight today as on site. why not current time?
             do {
                 Record record = daoRecord.readEntity(cursor, 0);
                 if (record.getEnd_date_formated().after(currentDate))
